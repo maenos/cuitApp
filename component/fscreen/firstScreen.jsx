@@ -6,9 +6,12 @@ import { useGetAPI } from "../../myHook/useApi";
 import config from "./../../config";
 import ModalPoup from "../plg/modalPop";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 function FirstScreen({ navigation }) {
   const { data, loading, error } = useGetAPI(config.API_URL + "/check");
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
 
   if (loading) {
     return null;
@@ -36,6 +39,7 @@ function FirstScreen({ navigation }) {
   }
 
   if (data.status == "update") {
+    return(
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <ModalPoup visible={true}>
         <View style={{ alignItems: "center" }}>
@@ -49,14 +53,12 @@ function FirstScreen({ navigation }) {
           Nous somme désolés, nous effectuons une mise à jours
         </Text>
       </ModalPoup>
-    </View>;
+    </View>);
   }
 
 
   
-  setTimeout(() => {
-    navigation.replace("Auth");
-  }, 3000);
+   
   return (
     <View style={style.container}>
       <Image
@@ -68,26 +70,5 @@ function FirstScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  modalBackGround: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContainer: {
-    width: "80%",
-    backgroundColor: "white",
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    borderRadius: 20,
-    elevation: 20,
-  },
-  header: {
-    width: "100%",
-    height: 40,
-    alignItems: "flex-end",
-    justifyContent: "center",
-  },
-});
+
 export default FirstScreen;

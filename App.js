@@ -1,21 +1,15 @@
 
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import FirstScreen from './component/fscreen/firstScreen';
+import { SafeAreaView, StatusBar } from 'react-native';
 import { useEffect, useState, useLayoutEffect } from 'react';
 import Loader from './component/loader';
 import { loadFonts } from './assets/font/fontLoade';
 import store from './store/store';
 import { Provider } from 'react-redux';
-import Auth from './component/auth/auth';
-import Dashboard from './component/userAuthPage/Dashboard';
 import AuthNavigator from './component/main';
 
 export default function App() {
 
 
-  const Stack = createNativeStackNavigator();
   const [isLoading, setIsLoading] = useState(true);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -50,8 +44,13 @@ export default function App() {
 
     <Provider store={store}>
 
-    <AuthNavigator></AuthNavigator>
-      
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+
+      <SafeAreaView style={{ flex: 1, height: '100%' }}>
+        <AuthNavigator></AuthNavigator>
+      </SafeAreaView>
+
+
     </Provider>
 
   );

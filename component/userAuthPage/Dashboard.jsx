@@ -18,7 +18,7 @@ const Dashboard = () => {
   }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',backgroundColor: '#fff' }}>
       <Text   style={{ fontSize: 20, fontWeight: 'bold' }}>Yes I am {user.username}</Text>
     </View>
   )

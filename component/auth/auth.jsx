@@ -54,7 +54,7 @@ const Auth = ( {navigation}) => {
 
 
       {
-        userExist === "touver" ?  <Text>Vous j'existe</Text> : userExist === "non trouver" ? <SignUp userData={userData} VefCode={VefCode} setUserExist={setUserExist} navigation={navigation}> </SignUp> : <AuthForm setUserExist={setUserExist} setUserData={setUserData} setVef={setVef}> </AuthForm>
+        userExist === "touver" ? null : userExist === "non trouver" ? <SignUp userData={userData} VefCode={VefCode} setUserExist={setUserExist} navigation={navigation}> </SignUp> : <AuthForm setUserExist={setUserExist} setUserData={setUserData} setVef={setVef}> </AuthForm>
       }
 
       {keyBoardShow()}

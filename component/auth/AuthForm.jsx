@@ -10,6 +10,8 @@ import { authUser, getMe } from "../../store/auth/action";
 import { apiPost } from "../../myHook/apiFunk";
 import config from "../../config";
 import codeGen from "../plg/codeGen";
+import PhoneInput from "react-native-phone-number-input";
+import { saveDataToSecureStore } from "../../myHook/Secure";
 
 const AuthForm = ({ setUserExist, setUserData, setVef }) => {
   const dispatch = useDispatch();
@@ -19,6 +21,7 @@ const AuthForm = ({ setUserExist, setUserData, setVef }) => {
   const [error, setErr] = useState("");
 
   const handlePhoneNumberChange = (text) => {
+    console.log(text);
     setPhoneNumber(text);
   };
 
@@ -27,42 +30,49 @@ const AuthForm = ({ setUserExist, setUserData, setVef }) => {
   };
 
   const handleSubmit = async () => {
-    const body = {
-      phoneNumber: phoneNumber,
-      password: password,
-    };
-    try {
-      const response = await apiPost(config.API_URL + "/checkUser", body);
+    if (
+      phoneNumber &&
+      password &&
+      password.trim() !== "" &&
+      phoneNumber.trim() !== ""
+    ) {
+      const body = {
+        phoneNumber: phoneNumber,
+        password: password,
+      };
+      try {
+        const response = await apiPost(config.API_URL + "/checkUser", body);
 
-      if (response.status) {
-        try {
-          const actionResult = await dispatch(authUser(body));
+        if (response.status) {
+          try {
+            const actionResult = await dispatch(authUser(body));
 
-          if (actionResult) {
-            const token = actionResult.payload.token;
-            try {
-              const resp = await dispatch(getMe(token));
-             
-            } catch (error) {
-              console.log(error);
+            if (actionResult) {
+              const token = actionResult.payload.token;
+              try {
+                saveDataToSecureStore("_authToken", token);
+                dispatch(getMe(token));
+              } catch (error) {
+                console.log(error);
+              }
             }
+          } catch (error) {
+            setErr("password");
           }
-        } catch (error) {
-          setErr("password");
-        }
-      } else {
-        setUserExist("non trouver");
-        setUserData(body);
+        } else {
+          setUserExist("non trouver");
+          setUserData(body);
 
-        const code = codeGen;
-        setVef(code);
-        console.log(code);
+          const code = codeGen;
+          setVef(code);
+          console.log(code);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      setErr("empty");
     }
-    console.log("Phone Number:", phoneNumber);
-    console.log("Password:", password);
   };
 
   return (
@@ -81,6 +91,11 @@ const AuthForm = ({ setUserExist, setUserData, setVef }) => {
       >
         Se connecter
       </Text>
+      {error == "empty" ? (
+        <Text style={{ textAlign: "center", color: "red", fontWeight: "bold" }}>
+          veuillez remplir les champs
+        </Text>
+      ) : null}
       {error == "password" ? (
         <Text style={{ textAlign: "center", color: "red", fontWeight: "bold" }}>
           Mot de passe incorrect
@@ -88,15 +103,22 @@ const AuthForm = ({ setUserExist, setUserData, setVef }) => {
       ) : null}
 
       <KeyboardAwareScrollView>
-        <TextInput
-          placeholder="Enter Phone Number (22...)"
-          style={style.Input}
-          value={phoneNumber}
-          keyboardType="number-pad"
-          onChangeText={handlePhoneNumberChange}
-        />
+        <PhoneInput
+          defaultValue={phoneNumber}
+          defaultCode="TG"
+          onChangeFormattedText={handlePhoneNumberChange}
+          containerStyle={{
+            borderColor: "#818181",
+            borderWidth: 1,
+            borderRadius: 12,
+            marginTop: 10,
+          }}
+          placeholder="numéro de téléphone"
+        ></PhoneInput>
 
-        <Text style={{ textAlign: "right" }}>Mots de passe oublier?</Text>
+        <Text style={{ textAlign: "right", marginVertical: 10 }}>
+          Mots de passe oublier?
+        </Text>
 
         <TextInput
           placeholder="Entrer un Mots de passe"
