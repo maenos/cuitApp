@@ -6,6 +6,11 @@ import { loadFonts } from './assets/font/fontLoade';
 import store from './store/store';
 import { Provider } from 'react-redux';
 import AuthNavigator from './component/main';
+import { useGetAPI } from './myHook/useApi';
+import { Text, View } from "react-native";
+import config from './config';
+import ModalPoup from './component/plg/modalPop';
+import { Image } from 'react-native';
 
 export default function App() {
 
@@ -37,7 +42,7 @@ export default function App() {
 
     return null
   }
-
+  
 
 
   return (

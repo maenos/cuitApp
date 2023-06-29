@@ -8,54 +8,118 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getDataFromSecureStore } from './../myHook/Secure';
 import { useDispatch } from "react-redux";
 import { getMe } from '../store/auth/action';
+import { useGetAPI } from '../myHook/useApi';
+import config from '../config';
+import { View, Text } from 'react-native';
+import ModalPoup from './plg/modalPop';
+import { Image } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const AuthNavigator = () => {
-    const dispatch = useDispatch();
-    const [isLoading, setIsLoading] = useState(true);
+  const { data, loading, error } = useGetAPI(config.API_URL + "/check");
+
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
 
 
-    useEffect(() => {
-        getData();
-        setTimeout(() => {
-            setIsLoading(false);
-        },  2000)
-    }, []);
-
-    const getData = async () => {
-        const value = await getDataFromSecureStore('_authToken');
-
-        dispatch(getMe(value));
-    };
 
 
-    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  useEffect(() => {
+    getData();
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000)
+  }, []);
 
-    if (isLoading) {
-        return <FirstScreen />
-        
-    } 
+  const getData = async () => {
+    const value = await getDataFromSecureStore('_authToken');
+
+    dispatch(getMe(value));
+  };
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+
+  if (isLoading) {
+    return <FirstScreen />
+
+  }
+
+
+  if (loading) {
+
+    return null
+  }
+  if (error) {
+
     return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                {
-                    !isLoggedIn ?
-                        <>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ModalPoup visible={true}>
+          <View style={{ alignItems: "center" }}>
+            <Image
+              source={require("./../assets/icons8-nerd-96.png")}
+              style={{ height: 150, width: 150, marginVertical: 10 }}
+            />
+          </View>
 
-                            <Stack.Screen name="Auth" component={Auth} options={{ headerShown: false }} />
-                        </>
-                        :
-                        <>
-                            <Stack.Screen name="Dashboard" component={Dashboard} options={{ headerShown: true, title: 'for login use' }} />
-                        </>
-                }
-
-
-
-            </Stack.Navigator>
-        </NavigationContainer>
+          <Text
+            style={{ marginVertical: 30, fontSize: 20, textAlign: "center" }}
+          >
+            Serveur Down: veuillez rechargez L'applicaton plus tard
+          </Text>
+        </ModalPoup>
+      </View>
     );
+  }
+
+  if (data.status == "update") {
+
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ModalPoup visible={true}>
+          <View style={{ alignItems: "center" }}>
+            <Image
+              source={require("./../assets/icons8-nerd-96.png")}
+              style={{ height: 150, width: 150, marginVertical: 10 }}
+            />
+          </View>
+
+          <Text style={{ marginVertical: 30, fontSize: 20, textAlign: "center" }}>
+            Nous somme désolés, nous effectuons une mise à jours
+          </Text>
+        </ModalPoup>
+      </View>);
+  }
+
+
+
+
+
+
+
+
+  return (
+    <NavigationContainer>
+      <Drawer.Screen name="Stack">
+        {() => (
+          <Stack.Navigator>
+            {!isLoggedIn ? (
+              <>
+                <Stack.Screen name="Auth" component={Auth} options={{ headerShown: false }} />
+              </>
+            ) : (
+              <>
+                <Stack.Screen name="Dashboard" component={Dashboard} options={{ headerShown: true, title: 'for login use' }} />
+              </>
+            )}
+          </Stack.Navigator>
+        )}
+      </Drawer.Screen>
+    </NavigationContainer>
+  );
 };
 
 export default AuthNavigator;
