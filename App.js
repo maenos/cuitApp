@@ -1,4 +1,4 @@
-
+import 'react-native-gesture-handler';
 import { SafeAreaView, StatusBar } from 'react-native';
 import { useEffect, useState, useLayoutEffect } from 'react';
 import Loader from './component/loader';
