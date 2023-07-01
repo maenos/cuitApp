@@ -27,6 +27,11 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
       state.user = action.payload.user;
     });
+    builder.addCase(getMe.rejected, (state) => {
+      state.isLoggedIn = false;
+      state.user = null;
+      state.token = null;
+    });
   }
 });
 

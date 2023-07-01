@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import FirstScreen from './fscreen/firstScreen';
 import Auth from './auth/auth';
-import Dashboard from './userAuthPage/Dashboard';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getDataFromSecureStore } from './../myHook/Secure';
 import { useDispatch } from "react-redux";
@@ -13,13 +12,13 @@ import config from '../config';
 import { View, Text } from 'react-native';
 import ModalPoup from './plg/modalPop';
 import { Image } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import DrawerNav from './drawerNav';
 
 const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
 
 const AuthNavigator = () => {
   const { data, loading, error } = useGetAPI(config.API_URL + "/check");
+
 
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
@@ -100,25 +99,17 @@ const AuthNavigator = () => {
 
 
 
-
   return (
     <NavigationContainer>
-      <Drawer.Screen name="Stack">
-        {() => (
-          <Stack.Navigator>
-            {!isLoggedIn ? (
-              <>
-                <Stack.Screen name="Auth" component={Auth} options={{ headerShown: false }} />
-              </>
-            ) : (
-              <>
-                <Stack.Screen name="Dashboard" component={Dashboard} options={{ headerShown: true, title: 'for login use' }} />
-              </>
-            )}
-          </Stack.Navigator>
-        )}
-      </Drawer.Screen>
-    </NavigationContainer>
+    {!isLoggedIn ? (
+      <Stack.Navigator>
+        <Stack.Screen name="Auth" component={Auth} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    ) : (
+      <DrawerNav/>
+
+    )}
+  </NavigationContainer>
   );
 };
 

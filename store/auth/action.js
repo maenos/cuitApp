@@ -38,8 +38,8 @@ export const getMe = createAsyncThunk('auth/getMe', async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.log(error)
-    throw new Error(error.message);
+   
+    return rejectWithValue(error.message);
   }
 });
 
