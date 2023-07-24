@@ -51,7 +51,7 @@ const AuthForm = ({ setUserExist, setUserData, setVef }) => {
               const token = actionResult.payload.token;
               try {
                 saveDataToSecureStore("_authToken", token);
-                dispatch(getMe(token));
+                await dispatch(getMe(token));
               } catch (error) {
                 console.log(error);
               }

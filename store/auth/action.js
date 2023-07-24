@@ -29,17 +29,18 @@ export const registerAndLogin = createAsyncThunk('auth/registerAndLogin', async 
   }
 });
 
-export const getMe = createAsyncThunk('auth/getMe', async (token) => {
+export const getMe = createAsyncThunk('auth/getMe', async (token, { rejectWithValue }) => {
   try {
-    const response = await axios.get(config.API_URL+ '/me', {
+    const response = await axios.get(config.API_URL + '/me', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data;
+    return {
+      user: response.data,
+      token: token,
+    };
   } catch (error) {
-   
     return rejectWithValue(error.message);
   }
 });
-

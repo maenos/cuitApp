@@ -28,9 +28,9 @@ export const style = StyleSheet.create({
     },
     HeaderLeftIcon:{
         
-        marginHorizontal: 20,
-        paddingTop: 15,
-        fontSize: 40,
+        marginHorizontal: 25,
+        paddingTop: 20,
+        fontSize: 35,
         fontWeight: 'normal',
         
     }

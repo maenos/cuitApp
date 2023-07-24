@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Loader from "../loader";
 import useLocation from "../../myHook/useLocation";
@@ -12,12 +12,22 @@ import { SearchBar } from "react-native-elements";
 const Tab = createBottomTabNavigator();
 
 const Dashboard = () => {
+ 
+
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   updateSearch = (search) => {
     setSearch(search);
     console.log(search);
   };
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  },[setIsLoading]);
+  if (isLoading) {
+    return <Loader />;
+  }
   const CustomHeader = () => {
     return (
       <View
@@ -53,14 +63,8 @@ const Dashboard = () => {
       </View>
     );
   };
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  });
-  if (isLoading) {
-    return <Loader />;
-  }
+ 
+  
 
   return (
     <Tab.Navigator
@@ -72,7 +76,8 @@ const Dashboard = () => {
     >
       <Tab.Screen name="Actualites" component={Actu} />
 
-      <Tab.Screen name="Suivis" component={Follow} />
+      <Tab.Screen name="Suivis" component={Follow}  />
+
     </Tab.Navigator>
   );
 };

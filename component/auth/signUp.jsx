@@ -39,8 +39,9 @@ const SignUp = ({ userData, VefCode, setUserExist,navigation }) => {
             const token = res.payload.token;
            try {
             const resp =  await dispatch(getMe(token));
+          
             if (resp) {
-                navigation.replace('Dashboard');
+                //navigation.replace('Dashboard');
             }
            } catch (error) {
             console.log(error)

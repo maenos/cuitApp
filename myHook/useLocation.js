@@ -3,7 +3,9 @@ import * as Location from 'expo-location';
 import axios from 'axios';
 
 const useLocation = () => {
-  const [location, setLocation] = useState(null);
+  const [latitude,  setLatitude] = useState(null);
+  const [longitude,  setLongitude] = useState(null);
+
   const [errorMsg, setErrorMsg] = useState(null);
   const [adresse, setAdresse] = useState(null);
 
@@ -19,9 +21,11 @@ const useLocation = () => {
         }
 
         let locationData = await Location.getCurrentPositionAsync({});
-        setLocation(locationData);
+      
 
         if (locationData) {
+          setLatitude(locationData.coords.latitude);
+          setLongitude(locationData.coords.longitude);
           fetchLocationData(locationData.coords.latitude, locationData.coords.longitude);
         }
       } catch (error) {
@@ -63,7 +67,7 @@ const useLocation = () => {
     getLocationAsync();
   }, []);
 
-  return { location, adresse,errorMsg };
+  return { latitude, longitude, adresse,errorMsg };
 };
 
 export default useLocation;

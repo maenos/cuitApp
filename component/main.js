@@ -7,6 +7,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { getDataFromSecureStore } from './../myHook/Secure';
 import { useDispatch } from "react-redux";
 import { getMe } from '../store/auth/action';
+import { initializeAuth, setToken } from '../store/auth/auth';
+
 import { useGetAPI } from '../myHook/useApi';
 import config from '../config';
 import { View, Text } from 'react-native';
@@ -27,19 +29,16 @@ const AuthNavigator = () => {
 
 
   useEffect(() => {
-    getData();
+  dispatch(initializeAuth());
     setTimeout(() => {
       setIsLoading(false);
     }, 1000)
-  }, []);
+  }, [setIsLoading]);
 
-  const getData = async () => {
-    const value = await getDataFromSecureStore('_authToken');
-
-    dispatch(getMe(value));
-  };
+  
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
 
 
   if (isLoading) {
@@ -101,15 +100,15 @@ const AuthNavigator = () => {
 
   return (
     <NavigationContainer>
-    {!isLoggedIn ? (
-      <Stack.Navigator>
-        <Stack.Screen name="Auth" component={Auth} options={{ headerShown: false }} />
-      </Stack.Navigator>
-    ) : (
-      <DrawerNav/>
+      {!isLoggedIn ? (
+        <Stack.Navigator>
+          <Stack.Screen name="Auth" component={Auth} options={{ headerShown: false }} />
+        </Stack.Navigator>
+      ) : (
+        <DrawerNav />
 
-    )}
-  </NavigationContainer>
+      )}
+    </NavigationContainer>
   );
 };
 
